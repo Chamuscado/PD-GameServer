@@ -1,13 +1,13 @@
 
-package three_in_row.logic;
+package GameServer.Logic;
+
+import GameServer.Logic.states.AwaitBeginning;
+import GameServer.Logic.states.AwaitPlacement;
+import GameServer.Logic.states.AwaitReturn;
+import GameServer.Logic.states.IStates;
+import GameLib.States;
 
 import java.util.Observable;
-
-import GameLib.States;
-import three_in_row.logic.states.AwaitBeginning;
-import three_in_row.logic.states.AwaitPlacement;
-import three_in_row.logic.states.AwaitReturn;
-import three_in_row.logic.states.IStates;
 
 public class ObservableGame extends Observable {
     private GameModel gameModel;
@@ -50,8 +50,8 @@ public class ObservableGame extends Observable {
         return gameModel.isOver();
     }
 
-    public boolean hasWon(InternalPlayer player) {
-        return gameModel.hasWon(player);
+    public int hasWon() {
+        return gameModel.hasWon();
     }
 
     public void setPlayerName(int num, String name) {

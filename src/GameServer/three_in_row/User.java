@@ -1,4 +1,6 @@
-package three_in_row;
+package GameServer.three_in_row;
+
+import GameLib.Strings;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,17 +8,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class User implements Runnable {
+public class User implements Runnable, Strings {
 
     private boolean run;
     private Thread thread;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Game parent;
+    private Game_old parent;
     public final int id;
 
-    public User(int id, Socket socket, Game parent) {
+    public User(int id, Socket socket, Game_old parent) {
         this.id = id;
         this.parent = parent;
         this.socket = socket;
@@ -42,15 +44,15 @@ public class User implements Runnable {
                 break;
             if (obj instanceof String) {
                 String str = (String) obj;
-                if (Game.debugMessages)
+                if (Game_old.debugMessages)
                     System.out.println(str);
                 Object objToSend = selectMethod(str);
-                if (Game.debugMessages)
+                if (Game_old.debugMessages)
                     System.out.println("Sending: <" + objToSend + ">");
                 if (objToSend != null)
                     sendObject(objToSend);
                 else
-                    sendObject(parent.NULL);
+                    sendObject(NULL);
             }
 
         }
@@ -60,33 +62,33 @@ public class User implements Runnable {
 
     private Object selectMethod(String str) {
         switch (str) {
-            case "startGame":
+            case STARTGAME:
                 parent.startGame(this);
                 return null;
-            case "getPlayer0":
+            case GETPLAYER_0:
                 return parent.getPlayer0(this);
-            case "getPlayer1":
+            case GETPLAYER_1:
                 return parent.getPlayer1(this);
-            case "getCurrentPlayer":
+            case GETCURRENTPLAYRT:
                 return parent.getCurrentPlayer(this);
-            case "isOver":
+            case ISOVER:
                 return parent.isOver(this);
-            case "getState":
+            case GETSTATE:
                 return parent.getState(this);
-            case "hasWon":
+            case HASWON:
                 return parent.hasWon(this, readObject());
-            case "setPlayerName":
+            case SETPLAYERNAME:
                 parent.setPlayerName(this, readObject(), readObject());
                 return null;
-            case "placeToken":
+            case PLACETOKEN:
                 parent.placeToken(this, readObject(), readObject());
                 return null;
-            case "returnToken":
+            case RETURNTOKEN:
                 parent.returnToken(this, readObject(), readObject());
                 return null;
-            case "getToken":
+            case GETTOKEN:
                 return parent.getToken(this, readObject(), readObject());
-            case "getMyId":
+            case GETMYID:
                 return id;
 
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="HeartBeats">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../HeartBeats/Jar/HeartBeats.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

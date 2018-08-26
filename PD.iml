@@ -10,5 +10,7 @@
     <orderEntry type="library" name="DataBaseIO_GameServer" level="project" />
     <orderEntry type="library" name="DataBaseIO" level="project" />
     <orderEntry type="library" name="GameLib" level="project" />
+    <orderEntry type="library" name="HeartBeats" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-8.0.12" level="project" />
   </component>
 </module>

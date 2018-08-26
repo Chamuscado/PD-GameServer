@@ -1,7 +1,7 @@
-package three_in_row.logic;
+package GameServer.three_in_row.logic;
 
-import three_in_row.logic.states.AwaitBeginning;
-import three_in_row.logic.states.IStates;
+import GameServer.three_in_row.logic.states.AwaitBeginning;
+import GameServer.three_in_row.logic.states.IStates;
 
 import java.io.Serializable;
 

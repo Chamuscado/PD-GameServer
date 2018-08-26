@@ -1,11 +1,11 @@
-package three_in_row;
+package GameServer.three_in_row;
 
 import GameLib.Player;
+import GameLib.Strings;
 import GameLib.Token;
-import three_in_row.User;
-import three_in_row.logic.InternalPlayer;
-import three_in_row.logic.InternalToken;
-import three_in_row.logic.ObservableGame;
+import GameServer.three_in_row.logic.InternalPlayer;
+import GameServer.three_in_row.logic.InternalToken;
+import GameServer.three_in_row.logic.ObservableGame;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,15 +13,14 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Game implements Observer {
-    final String NULL = "null";
+public class Game_old implements Observer, Strings {
     private User[] users;
     private boolean run;
     private ObservableGame obsGame;
     static final boolean debugMessages = true;
     private IGameServer servergame;
 
-    public Game(IGameServer server, Socket socketPlayer0, Socket socketPlayer1) {
+    public Game_old(IGameServer server, Socket socketPlayer0, Socket socketPlayer1) {
         servergame = server;
         users = new User[2];
         users[0] = new User(0, socketPlayer0, this);
@@ -29,11 +28,12 @@ public class Game implements Observer {
         obsGame = new ObservableGame();
     }
 
-    public Game(IGameServer server, Socket socketPlayer) {
+    public Game_old(IGameServer server, Socket socketPlayer) {
         servergame = server;
         users = new User[2];
         users[0] = new User(0, socketPlayer, this);
         users[1] = null;
+        users[0].sendObject(WAIT);
         obsGame = new ObservableGame();
     }
 
@@ -75,11 +75,11 @@ public class Game implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("update");
+        System.out.println(UPDATE);
         if (users[0] != null)
-            users[0].sendObject("update");
+            users[0].sendObject(UPDATE);
         if (users[1] != null)
-            users[1].sendObject("update");
+            users[1].sendObject(UPDATE);
     }
 
     void startGame(User user) {

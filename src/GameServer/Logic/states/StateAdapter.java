@@ -1,6 +1,7 @@
-package three_in_row.logic.states;
+package GameServer.Logic.states;
 
-import three_in_row.logic.GameData;
+
+import GameServer.Logic.GameData;
 
 public class StateAdapter implements IStates {
     private GameData game;
@@ -10,12 +11,12 @@ public class StateAdapter implements IStates {
         this.game =g;
     }
 
-    public GameData getGame() 
+    public GameData getGame()
     {
         return game;
     }
-    
-    public void setGame(GameData game) 
+
+    public void setGame(GameData game)
     {
         this.game = game;
     }

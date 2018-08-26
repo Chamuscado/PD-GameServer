@@ -1,5 +1,5 @@
 
-package three_in_row.files;
+package GameServer.three_in_row.files;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package three_in_row.logic;
+package GameServer.three_in_row.logic;
 
 import GameLib.Constants;
 

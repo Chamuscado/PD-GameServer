@@ -1,10 +1,9 @@
-package three_in_row.logic.states;
+package GameServer.Logic.states;
 
-import three_in_row.logic.GameData;
-import three_in_row.logic.InternalPlayer;
-import three_in_row.logic.InternalToken;
 
-import static GameLib.Constants.DIM;
+import GameServer.Logic.GameData;
+import GameServer.Logic.InternalPlayer;
+import GameServer.Logic.InternalToken;
 
 public class AwaitReturn extends StateAdapter
 {

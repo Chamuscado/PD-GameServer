@@ -1,6 +1,6 @@
-package three_in_row.logic.states;
+package GameServer.three_in_row.logic.states;
 
-import three_in_row.logic.GameData;
+import GameServer.three_in_row.logic.GameData;
 
 public class AwaitBeginning extends StateAdapter
 {

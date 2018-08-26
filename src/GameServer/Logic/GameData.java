@@ -1,4 +1,4 @@
-package three_in_row.logic;
+package GameServer.Logic;
 
 import GameLib.Constants;
 
@@ -127,12 +127,16 @@ public class GameData implements Serializable, Constants {
     }
 
     public boolean isOver() {
-        return hasWon(internalPlayers.get(0)) || hasWon(internalPlayers.get(1));
+        return hasWon() != INVALID_ID;
 
     }
 
-    public boolean hasWon(InternalPlayer internalPlayer) {
-        return isAlignedH(internalPlayer) || isAlignedD(internalPlayer) || isAlignedV(internalPlayer);
+    public int hasWon() {
+        for (InternalPlayer player : internalPlayers) {
+            if (isAlignedH(player) || isAlignedD(player) || isAlignedV(player))
+                return player.id;
+        }
+        return INVALID_ID;
     }
 
     private boolean isAlignedH(InternalPlayer internalPlayer) {
