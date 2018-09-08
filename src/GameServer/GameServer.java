@@ -50,7 +50,7 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
     private ServerSocket socket;
     private int port;
     private boolean run;
-    private boolean messages;
+    private boolean DEBUG;
     private final List<Game> games;
     private final List<Game> gameNotStarted;
 
@@ -58,7 +58,7 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
     public GameServer(int port) {
         games = new ArrayList<>();
         gameNotStarted = new ArrayList<>();
-        this.messages = true;
+        this.DEBUG = true;
         this.port = port;
         this.run = true;
         try {
@@ -96,13 +96,13 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
         }
         run = true;
         Game game = null;
-        if (messages)
+        if (DEBUG)
             System.out.println("Inicio:");
         while (run) {
 
             try {
                 Socket cli = socket.accept();
-                if (messages)
+                if (DEBUG)
                     System.out.println("Novo Cliente aceite, ip:" + cli.getInetAddress() + ":" + cli.getPort());
                 new User(cli, this.dataBase, this).start();
 /*
@@ -121,7 +121,7 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
             }
 
         }
-        if (messages)
+        if (DEBUG)
             System.out.println("Fim:");
         dataBase.close();
     }
@@ -133,8 +133,8 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
     }
 
     @Override
-    public void loginComplet(User user) {
-        if (messages)
+    public void loginCompleted(User user) {
+        if (DEBUG)
             System.out.println("login of " + user.getUsername() + "complet");
         PairDatabase pair = null;
         try {

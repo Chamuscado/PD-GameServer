@@ -15,6 +15,7 @@ import java.net.SocketTimeoutException;
 
 public class User implements Runnable, Constants {
 
+    private static final boolean DEBUG = false;
     private boolean run;
     private Thread thread;
     private Socket socket;
@@ -69,7 +70,8 @@ public class User implements Runnable, Constants {
 
 
     private void selectMethod(ServerRequest request) {
-        System.out.println("Recevido: <" + request + ">");
+        if (DEBUG)
+            System.out.println("Recevido: <" + request + ">");
         switch (request.getRequestKey()) {
             case LOGIN:
                 gameLogin(request);
@@ -96,7 +98,7 @@ public class User implements Runnable, Constants {
                 stop();
                 return;
             } else {
-                gameServer.loginComplet(this);
+                gameServer.loginCompleted(this);
                 if (parent != null && id != INVALID_ID && player != null) {
                     parent.setPlayerName(id, String.format("%s(%s)", player.getName(), player.getUser()));
                     update();
@@ -110,7 +112,8 @@ public class User implements Runnable, Constants {
 
     void sendObject(ClientRequest request) {
         try {
-            System.out.println("Enviado: <" + request + ">");
+            if (DEBUG)
+                System.out.println("Enviado: <" + request + ">");
             out.writeObject(request);
             out.flush();
         } catch (IOException e) {
@@ -141,7 +144,8 @@ public class User implements Runnable, Constants {
                 } while (!(obj instanceof ServerRequest));
                 return (ServerRequest) obj;
             } catch (SocketTimeoutException ex) {
-                System.out.println("Timeout - readObj");
+                if (DEBUG)
+                    System.out.println("Timeout - readObj");
             } catch (SocketException e) {
                 System.out.println("Conexao com " + socket.getInetAddress() + ":" + socket.getPort() + " perdida.");
                 run = false;
@@ -155,10 +159,8 @@ public class User implements Runnable, Constants {
 
 
     public void update() {
-        System.out.println("Update fase 1");
         if (parent == null)
             return;
-        System.out.println("Update fase 2");
         sendObject(new ClientRequest(ClientRequestKey.SETPLAYER_0, parent.getPlayer0(this)));
         sendObject(new ClientRequest(ClientRequestKey.SETPLAYER_1, parent.getPlayer1(this)));
         sendObject(new ClientRequest(ClientRequestKey.SETCURRENTPLAYER, parent.getCurrentPlayer(this)));
