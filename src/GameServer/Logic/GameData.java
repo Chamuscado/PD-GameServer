@@ -11,7 +11,6 @@ public class GameData implements Serializable, Constants {
     private List<InternalPlayer> internalPlayers;
 
     private int numCurrentPlayer;
-    private int numPlayers;
     private InternalToken[][] grid;
     //private IStates state;
 
@@ -19,7 +18,6 @@ public class GameData implements Serializable, Constants {
         internalPlayers = new ArrayList<>();
         // setState(new AwaitBeginning(this));
         numCurrentPlayer = -1;
-        numPlayers = 2;
         internalPlayers.add(new InternalPlayer("A", 0));
         internalPlayers.add(new InternalPlayer("B", 1));
         grid = new InternalToken[DIM][DIM];
@@ -72,19 +70,6 @@ public class GameData implements Serializable, Constants {
         }
 
         return grid[line][column];
-    }
-
-    public boolean setNumPlayers(int numPlayers) {
-        this.numPlayers = 2;
-
-        //if (numPlayers < 0 || numPlayers > 2) {
-        if (numPlayers != 2) {
-            return false;
-        }
-
-        this.numPlayers = numPlayers;
-
-        return true;
     }
 
     public void setNextPlayerTurn() {

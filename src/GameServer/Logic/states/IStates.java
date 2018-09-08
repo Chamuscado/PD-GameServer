@@ -8,7 +8,6 @@ import java.io.Serializable;
  * List of expected events when taking into account all the states.
  */
 public interface IStates extends Serializable, Constants {
-    IStates setNumberPlayers(int num);
 
     IStates setName(int num, String name);
 
@@ -18,5 +17,4 @@ public interface IStates extends Serializable, Constants {
 
     IStates returnToken(int line, int column);
 
-    IStates quit();
 }

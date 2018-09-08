@@ -22,9 +22,6 @@ public class StateAdapter implements IStates {
     }
 
     @Override
-    public IStates setNumberPlayers(int num){ return this;}
-
-    @Override
     public IStates setName(int num, String name){ return this;}
 
     @Override
@@ -35,8 +32,4 @@ public class StateAdapter implements IStates {
 
     @Override
     public IStates returnToken(int linha, int coluna){ return this;}
-
-    @Override
-    public IStates quit(){ return this;}
-    
 }

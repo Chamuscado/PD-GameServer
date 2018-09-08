@@ -10,14 +10,6 @@ public class AwaitBeginning extends StateAdapter
     {
         super(g);
     }
-    
-    @Override
-    public IStates setNumberPlayers(int num)
-    {
-        getGame().setNumPlayers(num);
-        return this;
-    }
-
     @Override
     public IStates setName(int num, String name)
     { 

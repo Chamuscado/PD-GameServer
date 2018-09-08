@@ -62,12 +62,4 @@ public class AwaitPlacement extends StateAdapter
         
         return this;
     }
-
-    @Override
-    public IStates quit()
-    {
-        getGame().getNotCurrentPlayer().setHasWon(true);
-        return new AwaitBeginning(getGame());
-    }
-    
 }

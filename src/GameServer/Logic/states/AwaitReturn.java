@@ -33,12 +33,4 @@ public class AwaitReturn extends StateAdapter
         getGame().removeToken(line, column);
         return new AwaitPlacement(getGame(), line, column);
     }
-    
-    @Override
-    public IStates quit()
-    { 
-        getGame().getNotCurrentPlayer().setHasWon(true);
-        return new AwaitBeginning(getGame());
-    }
-    
 }
