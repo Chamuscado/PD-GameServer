@@ -2,19 +2,24 @@ package GameServer.Game;
 
 import DataBaseIO.DataBaseIO;
 import DataBaseIO.Elements.GameDatabase;
+import DataBaseIO.Elements.PairDatabase;
 import DataBaseIO.Elements.PlayerDatabase;
 import DataBaseIO.Exceptions.*;
 import GameServer.Logic.InternalPlayer;
 import GameServer.Logic.InternalToken;
 import GameServer.Logic.ObservableGame;
 import GameLib.*;
+import javafx.scene.shape.Path;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Game implements Observer, Constants {
+    private static final String PATH = ".\\Saves\\";
     private User[] users;
     private boolean run;
     private ObservableGame obsGame;
@@ -28,13 +33,22 @@ public class Game implements Observer, Constants {
     }
 
     public Game(DataBaseIO dataBase, IGameServer server, User user) {
+        File file = new File(System.getProperty("user.dir") + PATH);
+        if (!file.exists())
+            file.mkdir();
         if (debugMessages)
             System.out.println("a criar Game...");
         servergame = server;
         run = true;
         users = new User[2];
         this.dataBase = dataBase;
-        obsGame = new ObservableGame();
+        String filename = "";
+        try {
+            filename = System.getProperty("user.dir") + PATH + dataBase.getPairAtual(user.getUsername()).getId();
+        } catch (UserNotFoundException | PairAtualNotFoundException e) {
+            e.printStackTrace();
+        }
+        obsGame = new ObservableGame(filename);
         obsGame.addObserver(this);
         users[0] = user;
         users[0].setParentAndId(this, 0);
@@ -53,6 +67,7 @@ public class Game implements Observer, Constants {
         }
         try {
             dataBase.createGame(dataBase.getPair(users[0].getUsername(), users[1].getUsername()));
+
         } catch (UserNotFoundException | PairNotFoundException | CorruptDataBaseException e) {
             endGame();
         } catch (UnfinishedGameException e) {
@@ -123,9 +138,9 @@ public class Game implements Observer, Constants {
     }
 
     void placeToken(User user, Object line, Object column) {
-        System.out.println("(" + line + "," + column + ")");
         if (line instanceof Integer && column instanceof Integer) {
-            if (obsGame.getCurrentPlayer().id == user.getId())
+            //  if (obsGame.getCurrentPlayer().id == user.getId())
+            if (obsGame.getCurrentPlayer().getName().equals(user.getPlayerName()))
                 obsGame.placeToken((int) line, (int) column);
         } else {
             System.out.println("placeToken: Parametros errados");
@@ -135,9 +150,9 @@ public class Game implements Observer, Constants {
     }
 
     void returnToken(User user, Object line, Object column) {
-        System.out.println("(" + line + "," + column + ")");
         if (line instanceof Integer && column instanceof Integer)
-            if (obsGame.getCurrentPlayer().id == user.getId())
+            //   if (obsGame.getCurrentPlayer().id == user.getId())
+            if (obsGame.getCurrentPlayer().getName().equals(user.getPlayerName()))
                 obsGame.returnToken((int) line, (int) column);
             else {
                 System.out.println("returnToken: Parametros errados");
@@ -147,7 +162,6 @@ public class Game implements Observer, Constants {
     }
 
     Object getToken(User user, Object line, Object column) {
-        System.out.println("(" + line + "," + column + ")");
         if (line instanceof Integer && column instanceof Integer)
             return InternalTokenToToken(obsGame.getToken((int) line, (int) column));
         else {

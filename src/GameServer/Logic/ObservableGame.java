@@ -7,13 +7,19 @@ import GameServer.Logic.states.AwaitReturn;
 import GameServer.Logic.states.IStates;
 import GameLib.States;
 
+import java.io.*;
 import java.util.Observable;
+
+import static GameLib.Constants.INVALID_ID;
 
 public class ObservableGame extends Observable {
     private GameModel gameModel;
+    private String fileName;
 
-    public ObservableGame() {
-        gameModel = new GameModel();
+    public ObservableGame(String fileName) {
+        //gameModel = new GameModel();
+        this.fileName = fileName + ".game";
+        gameModel = read(this.fileName);
     }
 
     public Byte getState() {
@@ -51,7 +57,10 @@ public class ObservableGame extends Observable {
     }
 
     public int hasWon() {
-        return gameModel.hasWon();
+        int won = gameModel.hasWon();
+        if (won != INVALID_ID)
+            delete(fileName);
+        return won;
     }
 
     public void setPlayerName(int num, String name) {
@@ -73,13 +82,55 @@ public class ObservableGame extends Observable {
 
         setChanged();
         notifyObservers();
+        save(gameModel, fileName);
     }
 
     public void returnToken(int line, int column) {
         gameModel.returnToken(line, column);
 
-
         setChanged();
         notifyObservers();
+        save(gameModel, fileName);
+    }
+
+    private static void save(GameModel gameModel, String filename) {
+        ObjectOutputStream oout = null;
+
+        try {
+            try {
+                File file = new File(filename);
+                oout = new ObjectOutputStream(new FileOutputStream(file));
+                oout.writeObject(gameModel);
+
+            } finally {
+                if (oout != null)
+                    oout.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static GameModel read(String filename) {
+        ObjectInputStream oin = null;
+        try {
+
+            try {
+                File file = new File(filename);
+                oin = new ObjectInputStream(new FileInputStream(file));
+                return (GameModel) oin.readObject();
+
+            } finally {
+                if (oin != null)
+                    oin.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            return new GameModel();
+        }
+    }
+
+    private static void delete(String filename) {
+        File file = new File(filename);
+        file.delete();
     }
 }

@@ -59,7 +59,6 @@ public class InternalPlayer implements Serializable, Constants
 
     public int getNumAvailableTokens()
     {
-        System.out.println("getNumAvailableTokens -> "+ availableInternalTokens.size());
         return availableInternalTokens.size();
     }
 

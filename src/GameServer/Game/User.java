@@ -196,4 +196,8 @@ public class User implements Runnable, Constants {
     public String getUsername() {
         return player.getUser();
     }
+
+    public String getPlayerName(){
+        return String.format("%s(%s)", player.getName(), player.getUser());
+    }
 }

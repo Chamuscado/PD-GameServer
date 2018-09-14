@@ -14,34 +14,64 @@ import HeartBeats.IHeartBeatsGameParent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent {
+public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent, Runnable {
 
-    private final static String dataBaseUser = "GameServer";
-    private final static String dataBasePass = "pd-1718";
+    private static String dataBaseUser = "GameServer";
+    private static String dataBasePass = "pd-1718";
     private static String dataBaseName = "PD_DataBase";
 
-
     static public void main(String[] args) {
+
+        String GestServerIP;
+
+
+        if (args.length != 1 && args.length != 4) {
+            System.out.println("Sintaxe: java GameServer <GestServerIP>");
+            System.out.println("Sintaxe: java GameServer <GestServerIP> <dataBaseName> <dataBaseUser> <dataBasePass>");
+            return;
+        }
+        GestServerIP = args[0];
+        if (!validIP(GestServerIP)) {
+            System.out.println("Endereço de IP inválido");
+            return;
+        }
+
+        if (args.length >= 4) {
+            dataBaseName = args[1];
+            dataBaseUser = args[2];
+            dataBasePass = args[3];
+        }
+
 
         GameServer server = new GameServer();
         HeartBeatsGame heartBeatsGame = HeartBeatsGame.startHeartBeatsGame(server, "127.0.0.1");
 
+        new Thread(server).start();
 
-        //   heartBeatsGame.DEBUG = true;
-        /*
+
+        Scanner in = new Scanner(System.in);
+        String cmd;
+        do {
+            cmd = in.nextLine();
+        } while (cmd.compareTo("stop") != 0);
+        server.stop();
+
+        heartBeatsGame.stop();
+
+    }
+
+    private void stop() {
+        run = false;
         try {
-            System.in.read();
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
-
-        server.run();
-        heartBeatsGame.stop();
-
     }
 
     private DataBaseIO dataBase;
@@ -78,6 +108,7 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
         return port;
     }
 
+    @Override
     public void run() {
         dataBase = new DataBaseIO(dataBaseName, dataBaseUser, dataBasePass, dataBaseIP);
         //DataBaseIO.DEBUG = true;
@@ -104,18 +135,11 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
                 Socket cli = socket.accept();
                 if (DEBUG)
                     System.out.println("Novo Cliente aceite, ip:" + cli.getInetAddress() + ":" + cli.getPort());
-                new User(cli, this.dataBase, this).start();
-/*
-                if (game == null || game.getNumPlayers() >= 2) {
 
-                    game = new Game(dataBase, this, user);
-                    game.start();
-                    synchronized (games) {
-                        games.add(game);
-                    }
-                } else
-                    game.addUser(user);
-                    */
+                new User(cli, this.dataBase, this).start();
+
+            } catch (SocketException e) {
+                break;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,5 +202,26 @@ public class GameServer implements IGameServer, Constants, IHeartBeatsGameParent
     @Override
     public void setDataBasePort(int port) {
         this.dataBasePort = port;
+    }
+
+    private static boolean validIP(String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+            String[] parts = ip.split("\\.");
+            if (parts.length != 4) {
+                return false;
+            }
+            for (String s : parts) {
+                int i = Integer.parseInt(s);
+                if (i < 0 || i > 255) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (NumberFormatException ignore) {
+            return false;
+        }
     }
 }
